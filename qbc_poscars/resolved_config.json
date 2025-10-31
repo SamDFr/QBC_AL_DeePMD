@@ -1,0 +1,31 @@
+{
+  "MODELS": [
+    "./models/graph.001.pb",
+    "./models/graph.002.pb",
+    "./models/graph.003.pb",
+    "./models/graph.004.pb"
+  ],
+  "POOL": "./md_pools/**/*.lammpstrj",
+  "ASE_FORMAT": "lammps-dump-text",
+  "TYPE_MAP": [
+    "N",
+    "O",
+    "C"
+  ],
+  "THRESH_LOW": 0.05,
+  "THRESH_HIGH": 0.5,
+  "METRIC": "score",
+  "W_FORCE": 1.0,
+  "W_ENE": 0.0,
+  "W_VIR": 0.0,
+  "FORCE_REDUCER": "max",
+  "FORCE_STD_MODE": "mag",
+  "SKIP": 0,
+  "STRIDE": 100,
+  "LIMIT": null,
+  "OUT_DIR": "./qbc_poscars",
+  "OUT_DIR_XYZ": "./qbc_XYZ",
+  "OUT_DIR_RESULTS": "./qbc_outputs",
+  "TAG": "NO_HOPG",
+  "TOP_K": null
+}

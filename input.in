@@ -1,0 +1,28 @@
+# --- paths ---
+MODELS=./models/graph.001.pb,./models/graph.002.pb,./models/graph.003.pb,./models/graph.004.pb
+POOL=./md_pools/**/*.lammpstrj
+ASE_FORMAT=lammps-dump-text
+TYPE_MAP=N,O,C
+
+# --- thresholds ---
+THRESH_LOW=0.05      # select frames with score >= 0.05
+THRESH_HIGH=0.50     # and score <= 0.5
+METRIC=score
+
+# --- weights ---
+W_FORCE=1.0
+W_ENE=0.0
+W_VIR=0.0
+FORCE_REDUCER=max
+FORCE_STD_MODE=mag  # options: mag | comp_norm | comp_max
+
+# --- subsampling ---
+SKIP=0
+STRIDE=100
+LIMIT=None
+
+# --- outputs ---
+OUT_DIR=./qbc_poscars        # only POSCAR directories go here
+OUT_DIR_XYZ=./qbc_XYZ        # single multi-frame marked_selection.xyz
+OUT_DIR_RESULTS=./qbc_outputs  # NEW → stores CSV, histogram, npy, summary
+TAG=NO_HOPG
