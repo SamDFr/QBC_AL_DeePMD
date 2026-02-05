@@ -1,0 +1,23 @@
+# Ignore everything by default
+*
+
+# Keep repository metadata
+!.gitignore
+
+# Keep essential inputs/code/docs
+!QBC_active_learning_HPC_version.py
+!README.md
+!input.in
+
+# Keep output directories (empty) but ignore generated contents
+!qbc_poscars/
+qbc_poscars/*
+!qbc_poscars/.gitkeep
+
+!qbc_XYZ/
+qbc_XYZ/*
+!qbc_XYZ/.gitkeep
+
+!qbc_outputs/
+qbc_outputs/*
+!qbc_outputs/.gitkeep
