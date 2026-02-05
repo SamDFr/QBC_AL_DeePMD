@@ -9,6 +9,15 @@
 !README.md
 !input.in
 
+# Keep data/model directories (empty)
+!models/
+models/*
+!models/.gitkeep
+
+!md_pools/
+md_pools/*
+!md_pools/.gitkeep
+
 # Keep output directories (empty) but ignore generated contents
 !qbc_poscars/
 qbc_poscars/*
