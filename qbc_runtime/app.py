@@ -440,7 +440,7 @@ def main():
             at2 = at.copy()
             at2.new_array("std_f", std_f.astype(float))
             at2.new_array("local_score", local_score.astype(float))
-            syms = at2.get_chemical_symbols(); syms[i_mark] = "H"; at2.set_chemical_symbols(syms)
+            syms = at2.get_chemical_symbols(); syms[i_mark] = "He"; at2.set_chemical_symbols(syms)
 
             comment = (
                 f"rank={r}; gidx={int(df.iloc[j]['global_idx'])}; "

@@ -90,7 +90,7 @@ The committed defaults in [`input.in`](./input.in) intentionally point to the tw
 - `qbc_outputs/score_histogram.csv` and `<metric>_values.npy` – quick diagnostics for plotting score distributions.
 - `qbc_outputs/run_summary.json` – machine-readable recap (counts, paths, thresholds used).
 - `qbc_poscars/POSCAR_rankXXXXX_gYYYYYYY[_TAG]/POSCAR` – one folder per selected frame for easy VASP submission.
-- `qbc_XYZ/marked_selection.xyz` – concatenated EXTXYZ with per-atom fields (`std_f`, `local_score`); the atom with the highest local score is relabeled as `H` to simplify visualization in OVITO/ASE GUI.
+- `qbc_XYZ/marked_selection.xyz` – concatenated EXTXYZ with per-atom fields (`std_f`, `local_score`); the atom with the highest local score is relabeled as `He` to simplify visualization in OVITO/ASE GUI while avoiding confusion with real hydrogen.
 
 ## Tips
 - Always ensure every atom type present in `md_pools/` appears in `TYPE_MAP`; the script raises an explicit error otherwise.
