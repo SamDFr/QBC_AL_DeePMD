@@ -23,10 +23,16 @@ __pycache__/
 !models/
 models/*
 !models/.gitkeep
+!models/graph.001.pb
+!models/graph.002.pb
 
 !md_pools/
 md_pools/*
 !md_pools/.gitkeep
+!md_pools/TS5_500K/
+md_pools/TS5_500K/*
+!md_pools/TS5_500K/nve_50.lammpstrj
+!md_pools/TS5_500K/nve_51.lammpstrj
 
 # Keep output directories (empty) but ignore generated contents
 !qbc_poscars/

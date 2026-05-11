@@ -1,6 +1,6 @@
 # --- paths ---
-MODELS=./models/graph.001.pb,./models/graph.002.pb,./models/graph.003.pb,./models/graph.004.pb
-POOL=./md_pools/**/*.lammpstrj
+MODELS=./models/graph.001.pb,./models/graph.002.pb
+POOL=./md_pools/TS5_500K/nve_5[01].lammpstrj
 ASE_FORMAT=lammps-dump-text
 TYPE_MAP=N,O,C
 

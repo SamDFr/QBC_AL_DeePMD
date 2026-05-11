@@ -6,8 +6,8 @@ This script (`QBC_active_learning_HPC_version.py`) scans molecular dynamics traj
 - `run_qbc.py` – single top-level executable; validates the environment and starts the workflow.
 - `qbc_runtime/` – internal implementation and validation helpers.
 - `input.in` – key/value config file consumed by the script.
-- `models/` – directory holding the DeePMD frozen graphs that make up the committee (≥2 required).
-- `md_pools/` – recursive tree of trajectory files; adjust the glob in `POOL` to match your dataset.
+- `models/` – directory holding the DeePMD frozen graphs that make up the committee (≥2 required). This repo keeps two sample models for a runnable smoke test.
+- `md_pools/` – recursive tree of trajectory files; adjust the glob in `POOL` to match your dataset. This repo keeps two sample trajectories for testing.
 - `qbc_poscars/`, `qbc_XYZ/`, `qbc_outputs/` – auto-created each run for POSCAR bundles, marked XYZ trajectory, and tabular diagnostics.
 
 ## Requirements
@@ -62,6 +62,8 @@ If `deepmd-kit` is not pip-installable on your platform, keep using the cluster-
 3. (Optional) Clean previous outputs by deleting `qbc_poscars`, `qbc_XYZ`, `qbc_outputs`; the script also empties these targets at runtime.
 4. Run `python run_qbc.py` from this folder. This launcher validates the environment first, then starts the selector.
 5. Inspect `qbc_outputs/selection.csv` to see which frames were exported and adjust thresholds if needed.
+
+The committed defaults in [`input.in`](./input.in) intentionally point to the two bundled models and two bundled trajectories so the repository remains self-testable.
 
 ## Configuration Reference (`input.in`)
 | Key | Purpose / Notes | Default |
