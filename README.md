@@ -1,6 +1,6 @@
 # QBC Active Learning Selector (HPC Version)
 
-This script (`QBC_active_learning_HPC_version.py`) scans molecular dynamics trajectories with a committee of DeePMD models, ranks frames by model disagreement, and exports only the most uncertain snapshots as VASP-ready `POSCAR` folders plus summary CSV files. It is meant to run on shared clusters where inference is cheap but retraining is deferred.
+This tool scans molecular dynamics trajectories with a committee of DeePMD models, ranks frames by model disagreement, and exports only the most uncertain snapshots as VASP-ready `POSCAR` folders plus summary CSV files. It is meant to run on shared clusters where inference is cheap but retraining is deferred.
 
 ## Directory Layout
 - `run_qbc.py` – single top-level executable; validates the environment and starts the workflow.
@@ -15,6 +15,7 @@ This script (`QBC_active_learning_HPC_version.py`) scans molecular dynamics traj
 - Runtime Python packages listed in [`requirements.txt`](./requirements.txt): `numpy`, `pandas`, `ase`, `deepmd-kit`, and a TensorFlow backend for DeePMD `.pb` models.
 - Trajectory files readable by ASE (e.g., `lammps-dump-text`, `extxyz`, `traj`, ...).
 - A DeePMD type map covering every element present in your trajectories.
+- Write access to the repository output directories (`qbc_poscars/`, `qbc_XYZ/`, `qbc_outputs/`).
 - On HPC systems, `deepmd-kit` is often provided by a site module or a Conda environment; use the same runtime stack as your DeePMD training/inference jobs.
 
 ## Environment Setup
@@ -60,7 +61,7 @@ If `deepmd-kit` is not pip-installable on your platform, keep using the cluster-
    - `POOL` – glob pointing to the MD data (supports `**` for recursion).
    - Thresholds (`THRESH_LOW`, `THRESH_HIGH`) or `TOP_K`, weights, stride, etc.
 3. (Optional) Clean previous outputs by deleting `qbc_poscars`, `qbc_XYZ`, `qbc_outputs`; the script also empties these targets at runtime.
-4. Run `python run_qbc.py` from this folder. This launcher validates the environment first, then starts the selector.
+4. Run `python run_qbc.py`. This launcher validates the environment first, switches to the repository root, uses a temporary writable Matplotlib cache, and then starts the selector.
 5. Inspect `qbc_outputs/selection.csv` to see which frames were exported and adjust thresholds if needed.
 
 The committed defaults in [`input.in`](./input.in) intentionally point to the two bundled models and two bundled trajectories so the repository remains self-testable.
@@ -71,7 +72,7 @@ The committed defaults in [`input.in`](./input.in) intentionally point to the tw
 | `MODELS` | Comma-separated DeePMD frozen graphs for the committee (≥2). | **required** |
 | `POOL` | Glob for trajectory files; accepts recursion via `**`. | **required** |
 | `ASE_FORMAT` | ASE reader to use (`lammps-dump-text`, `extxyz`, etc.). `None` lets ASE auto-detect. | `lammps-dump-text` |
-| `TYPE_MAP` | Either inline list (`N,O,C`) or path to a text file with one element per line. | **required** |
+| `TYPE_MAP` | Either inline list (`N,O,C`) or a path to a text file with one element per line. | **required** |
 | `THRESH_LOW`/`THRESH_HIGH` | Score window to keep. Provide both, one, or neither (if using `TOP_K`). | none |
 | `TOP_K` | Use rank-based selection when thresholds are omitted. | none |
 | `METRIC` | Column used for ranking; currently `score` (weighted sum of force/energy/virial disagreement). | `score` |

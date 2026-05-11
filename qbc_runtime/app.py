@@ -9,7 +9,7 @@ from __future__ import annotations
 # %%
 # --- Imports
 
-import os, glob, shutil, math, json
+import os, glob, shutil, math, json, tempfile
 from pathlib import Path
 from typing import List, Tuple, Dict, Any
 
@@ -34,7 +34,7 @@ def load_runtime_dependencies():
         from deepmd.infer import DeepPot
     except Exception as exc:
         raise RuntimeError(
-            "Missing runtime dependencies. Run `python validate_environment.py` "
+            "Missing runtime dependencies. Run `python -m qbc_runtime.validate_environment` "
             "and install the required packages before launching the selector."
         ) from exc
     return np, pd, read, write, symbols2numbers, Atoms, DeepPot
@@ -79,7 +79,7 @@ def read_input(path: str) -> Dict[str, Any]:
             k, v = k.strip(), v.strip()
             if not k:
                 continue
-            if k in {"MODELS", "TYPE_MAP"}:
+            if k == "MODELS":
                 cfg[k] = [s.strip() for s in v.split(",") if s.strip()]
             elif k in {"POOL"}:
                 cfg[k] = v
@@ -218,11 +218,30 @@ def ensure_clean_dir(path: Path):
     if path.exists():
         for f in path.iterdir():
             if f.is_file() or f.is_symlink():
-                f.unlink()
+                try:
+                    f.unlink()
+                except PermissionError:
+                    try:
+                        os.chmod(f, 0o700)
+                        f.unlink()
+                    except PermissionError as exc:
+                        raise PermissionError(
+                            f"Cannot clean output file {f}. Check write permissions for {path}."
+                        ) from exc
             elif f.is_dir():
-                shutil.rmtree(f)
+                try:
+                    shutil.rmtree(f, onerror=_rmtree_force_writable)
+                except PermissionError as exc:
+                    raise PermissionError(
+                        f"Cannot clean output directory {f}. Check write permissions for {path}."
+                    ) from exc
     else:
         path.mkdir(parents=True)
+
+
+def _rmtree_force_writable(func, path, exc_info):
+    os.chmod(path, 0o700)
+    func(path)
 
 
 # %%

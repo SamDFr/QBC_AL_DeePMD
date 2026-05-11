@@ -8,6 +8,7 @@ import glob
 import importlib
 import os
 import sys
+import tempfile
 from pathlib import Path
 
 
@@ -37,7 +38,9 @@ def _read_input_config(path: Path) -> dict[str, str]:
 def main() -> int:
     root = Path(__file__).resolve().parent.parent
     problems: list[str] = []
-    os.environ.setdefault("MPLCONFIGDIR", str(root / ".mplconfig"))
+    mpl_dir = Path(tempfile.gettempdir()) / "qbc-active-learning-mplconfig"
+    mpl_dir.mkdir(parents=True, exist_ok=True)
+    os.environ.setdefault("MPLCONFIGDIR", str(mpl_dir))
 
     print("[check] validating Python imports")
     for module_name, package_name in REQUIRED_MODULES.items():
@@ -110,7 +113,7 @@ def main() -> int:
             print(f"  - {problem}")
         return 1
 
-    print("[ok] environment looks ready for QBC_active_learning_HPC_version.py")
+    print("[ok] environment looks ready for run_qbc.py")
     return 0
 
 
