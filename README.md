@@ -3,7 +3,8 @@
 This script (`QBC_active_learning_HPC_version.py`) scans molecular dynamics trajectories with a committee of DeePMD models, ranks frames by model disagreement, and exports only the most uncertain snapshots as VASP-ready `POSCAR` folders plus summary CSV files. It is meant to run on shared clusters where inference is cheap but retraining is deferred.
 
 ## Directory Layout
-- `QBC_active_learning_HPC_version.py` – main entry point, pure inference/selection (no training or job submission).
+- `run_qbc.py` – single top-level executable; validates the environment and starts the workflow.
+- `qbc_runtime/` – internal implementation and validation helpers.
 - `input.in` – key/value config file consumed by the script.
 - `models/` – directory holding the DeePMD frozen graphs that make up the committee (≥2 required).
 - `md_pools/` – recursive tree of trajectory files; adjust the glob in `POOL` to match your dataset.
@@ -23,13 +24,13 @@ For scientific Python on HPC, this is the more reliable default than plain `venv
 ```bash
 conda env create -f environment.yml
 conda activate qbc-active-learning
-python validate_environment.py
+python -m qbc_runtime.validate_environment
 ```
 
 If the cluster already provides `deepmd-kit` through a module or site environment, activate that first and use the validator:
 
 ```bash
-python validate_environment.py
+python -m qbc_runtime.validate_environment
 ```
 
 ### Option 2: standard `venv`
@@ -38,7 +39,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python validate_environment.py
+python -m qbc_runtime.validate_environment
 ```
 
 ### Option 3: cluster-managed Python / existing DeePMD environment
@@ -47,13 +48,13 @@ If your cluster already provides `deepmd-kit`, activate that environment first a
 ```bash
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python validate_environment.py
+python -m qbc_runtime.validate_environment
 ```
 
-If `deepmd-kit` is not pip-installable on your platform, keep using the cluster-provided module or Conda package. In that case, [`environment.yml`](./environment.yml) and [`validate_environment.py`](./validate_environment.py) are the safer references than `requirements.txt` alone. The validator checks both imports and whether the first DeePMD model can actually be opened by the installed backend.
+If `deepmd-kit` is not pip-installable on your platform, keep using the cluster-provided module or Conda package. In that case, [`environment.yml`](./environment.yml) and `python -m qbc_runtime.validate_environment` are the safer references than `requirements.txt` alone. The validator checks both imports and whether the first DeePMD model can actually be opened by the installed backend.
 
 ## Quickstart
-1. Create or activate the environment, then run [`validate_environment.py`](./validate_environment.py).
+1. Create or activate the environment, then run `python -m qbc_runtime.validate_environment`.
 2. Copy `input.in` and adjust:
    - `MODELS` – comma-separated paths to `graph.pb` files.
    - `POOL` – glob pointing to the MD data (supports `**` for recursion).

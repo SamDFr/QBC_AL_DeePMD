@@ -8,8 +8,8 @@ import os
 import sys
 from pathlib import Path
 
-import QBC_active_learning_HPC_version as qbc
-from validate_environment import main as validate_environment
+from qbc_runtime import app as qbc
+from qbc_runtime.validate_environment import main as validate_environment
 
 
 def main() -> int:

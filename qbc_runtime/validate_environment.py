@@ -35,7 +35,7 @@ def _read_input_config(path: Path) -> dict[str, str]:
 
 
 def main() -> int:
-    root = Path(__file__).resolve().parent
+    root = Path(__file__).resolve().parent.parent
     problems: list[str] = []
     os.environ.setdefault("MPLCONFIGDIR", str(root / ".mplconfig"))
 

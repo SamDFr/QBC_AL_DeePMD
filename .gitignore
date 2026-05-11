@@ -5,13 +5,13 @@
 !.gitignore
 
 # Keep essential inputs/code/docs
-!QBC_active_learning_HPC_version.py
 !README.md
 !input.in
 !requirements.txt
 !environment.yml
-!validate_environment.py
 !run_qbc.py
+!qbc_runtime/
+!qbc_runtime/*.py
 
 # Local environments and caches
 .venv/
