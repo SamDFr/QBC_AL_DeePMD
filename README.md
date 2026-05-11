@@ -10,19 +10,56 @@ This script (`QBC_active_learning_HPC_version.py`) scans molecular dynamics traj
 - `qbc_poscars/`, `qbc_XYZ/`, `qbc_outputs/` – auto-created each run for POSCAR bundles, marked XYZ trajectory, and tabular diagnostics.
 
 ## Requirements
-- Python 3.9+ with `numpy`, `pandas`, `ase`.
-- `deepmd-kit` ≥ 2.0 (needed for `deepmd.infer.DeepPot`); load the same module your training jobs use.
+- Python 3.9+.
+- Runtime Python packages listed in [`requirements.txt`](./requirements.txt): `numpy`, `pandas`, `ase`, `deepmd-kit`, and a TensorFlow backend for DeePMD `.pb` models.
 - Trajectory files readable by ASE (e.g., `lammps-dump-text`, `extxyz`, `traj`, ...).
 - A DeePMD type map covering every element present in your trajectories.
+- On HPC systems, `deepmd-kit` is often provided by a site module or a Conda environment; use the same runtime stack as your DeePMD training/inference jobs.
+
+## Environment Setup
+### Recommended: Conda or Mamba
+For scientific Python on HPC, this is the more reliable default than plain `venv`.
+
+```bash
+conda env create -f environment.yml
+conda activate qbc-active-learning
+python validate_environment.py
+```
+
+If the cluster already provides `deepmd-kit` through a module or site environment, activate that first and use the validator:
+
+```bash
+python validate_environment.py
+```
+
+### Option 2: standard `venv`
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python validate_environment.py
+```
+
+### Option 3: cluster-managed Python / existing DeePMD environment
+If your cluster already provides `deepmd-kit`, activate that environment first and then install the remaining Python dependencies only if they are missing:
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python validate_environment.py
+```
+
+If `deepmd-kit` is not pip-installable on your platform, keep using the cluster-provided module or Conda package. In that case, [`environment.yml`](./environment.yml) and [`validate_environment.py`](./validate_environment.py) are the safer references than `requirements.txt` alone. The validator checks both imports and whether the first DeePMD model can actually be opened by the installed backend.
 
 ## Quickstart
-1. Activate the environment that already has `deepmd-kit`, ASE, NumPy, and pandas.
+1. Create or activate the environment, then run [`validate_environment.py`](./validate_environment.py).
 2. Copy `input.in` and adjust:
    - `MODELS` – comma-separated paths to `graph.pb` files.
    - `POOL` – glob pointing to the MD data (supports `**` for recursion).
    - Thresholds (`THRESH_LOW`, `THRESH_HIGH`) or `TOP_K`, weights, stride, etc.
 3. (Optional) Clean previous outputs by deleting `qbc_poscars`, `qbc_XYZ`, `qbc_outputs`; the script also empties these targets at runtime.
-4. Run `python QBC_active_learning_HPC_version.py` from this folder. The script logs progress, scoring statistics, and the resolved configuration.
+4. Run `python run_qbc.py` from this folder. This launcher validates the environment first, then starts the selector.
 5. Inspect `qbc_outputs/selection.csv` to see which frames were exported and adjust thresholds if needed.
 
 ## Configuration Reference (`input.in`)

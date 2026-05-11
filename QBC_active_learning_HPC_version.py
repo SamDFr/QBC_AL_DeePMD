@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 # %% [markdown]
 # # HPC version — QBC selector for DeePMD → POSCAR exporter
 # ## **Purpose**: score MD frames with a DeePMD committee, pick uncertain ones, export as POSCAR + selection.csv.
@@ -10,18 +12,32 @@
 import os, glob, shutil, math, json
 from pathlib import Path
 from typing import List, Tuple, Dict, Any
-import numpy as np
-import pandas as pd
 
-from ase.io import read, write
-from ase.symbols import symbols2numbers
-from ase import Atoms
+np = None
+pd = None
+read = None
+write = None
+symbols2numbers = None
+Atoms = None
+DeepPot = None
 
-# --- DeePMD inference
-try:
-    from deepmd.infer import DeepPot
-except Exception as e:
-    raise RuntimeError("Requires deepmd-kit >= 2.x for inference") from e
+
+def load_runtime_dependencies():
+    """Import third-party runtime dependencies with a clear failure message."""
+    global np, pd, read, write, symbols2numbers, Atoms, DeepPot
+    try:
+        import numpy as np
+        import pandas as pd
+        from ase.io import read, write
+        from ase.symbols import symbols2numbers
+        from ase import Atoms
+        from deepmd.infer import DeepPot
+    except Exception as exc:
+        raise RuntimeError(
+            "Missing runtime dependencies. Run `python validate_environment.py` "
+            "and install the required packages before launching the selector."
+        ) from exc
+    return np, pd, read, write, symbols2numbers, Atoms, DeepPot
 
 # %%
 # ----------------------------
@@ -215,6 +231,7 @@ def ensure_clean_dir(path: Path):
 # ----------------------------
 def main():
     print("[INFO] ===== QBC ACTIVE LEARNING SELECTION START =====")
+    load_runtime_dependencies()
 
     cfg = read_input("input.in")
 
@@ -447,5 +464,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
