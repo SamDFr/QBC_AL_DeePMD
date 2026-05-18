@@ -79,7 +79,7 @@ The committed defaults in [`input.in`](./input.in) intentionally point to the tw
 | `W_FORCE`, `W_ENE`, `W_VIR` | Contribution of std(force), std(energy), std(virial). | `1.0`, `0.0`, `0.0` |
 | `FORCE_REDUCER` | `max` (default) or `mean` aggregation of per-atom std. | `max` |
 | `FORCE_STD_MODE` | `mag`, `comp_norm`, or `comp_max` to control how per-atom force spread is computed. | `mag` |
-| `SKIP`, `STRIDE` | Subsampling knobs applied before scoring each trajectory. | `0`, `1` |
+| `SKIP`, `STRIDE` | Subsampling knobs applied before scoring each trajectory. | `0`, `5` |
 | `LIMIT` | Total number of frames to score (after skip/stride); `None` processes all. | `None` |
 | `OUT_DIR`, `OUT_DIR_XYZ`, `OUT_DIR_RESULTS` | Destination folders; emptied and recreated every run. | `./qbc_poscars`, `./qbc_XYZ`, `./qbc_outputs` |
 | `TAG` | Optional suffix appended to exported POSCAR folders. | empty |

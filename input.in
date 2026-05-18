@@ -18,7 +18,7 @@ FORCE_STD_MODE=mag  # options: mag | comp_norm | comp_max
 
 # --- subsampling ---
 SKIP=0
-STRIDE=100
+STRIDE=5
 LIMIT=None
 
 # --- outputs ---
